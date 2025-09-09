@@ -2,6 +2,7 @@ package mid1.assignment1;
 
 import mid1.assignment1.user.User;
 import mid1.assignment1.user.UserRepository;
+import mid1.assignment1.user.UserService;
 
 public class UserManagementMain {
 
@@ -15,22 +16,27 @@ public class UserManagementMain {
         System.out.println("## 동등성(equals) 비교: " + user1.equals(user1_duplicate));
         System.out.println();
 
-        // 2. UserRepository 테스트
-        UserRepository repository = new UserRepository();
+        // 2. UserService 테스트
+        UserService service = new UserService();
 
-        repository.saveUser(user1);
-        repository.saveUser(user2);
+        System.out.println("## 사용자 등록 시도");
+        service.registerUser(user1);
+        service.registerUser(user2);
+        System.out.println();
 
         // 3. 중복 ID 저장 시도
         System.out.println("## 중복 ID 저장 시도");
-        repository.saveUser(user1_duplicate); // user1과 동등하므로 저장되면 안 됨
+        service.registerUser(user1_duplicate); // user1과 동등하므로 저장되면 안 됨
         System.out.println();
 
-        // 4. ID로 사용자 검색
+        // 4. ID로 사용자 검색 및 검색 결과 및 toString() 확인
         System.out.println("## ID로 사용자 검색");
-        User foundUser = repository.findUserById("user1");
+        service.findUser("user1");
+        System.out.println();
 
-        // 5. 검색 결과 및 toString() 확인
-        System.out.println("검색된 사용자: " + foundUser);
+        // 5. 존재하지 않는 ID로 사용자 검색 및 검색 결과 및 toString() 확인
+        System.out.println("## 잘못된 ID로 사용자 검색");
+        service.findUser("u");
+
     }
 }
