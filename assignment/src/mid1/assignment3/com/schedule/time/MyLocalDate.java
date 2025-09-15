@@ -9,7 +9,6 @@ public class MyLocalDate {
     // 해당월이 몇일인지
     private final static int[] perMonthDays = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     private final int TOTAL_MONTHS = 12;
-    private final int TOTAL_DAYS = 365;
 
     public MyLocalDate(int year, int month, int day) {
         this.year = year;
@@ -47,13 +46,10 @@ public class MyLocalDate {
         return new MyLocalDate(plusYear,plusMonth,plusDay);
     }
 
-    private void isNextYear(int plusMonth) {
-
-    }
-
     // [더할 년,더할 월,남은 일)
     private MyLocalDate bigPlusDays(int day) {
         // 입력값이 1년(=365)일 이상인지
+        int TOTAL_DAYS = 365;
         int plusYear = day / TOTAL_DAYS;
         int plusMonth = 0;
         int dayModYear = day % TOTAL_DAYS;

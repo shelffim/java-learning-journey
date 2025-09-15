@@ -11,12 +11,12 @@ public class Event {
         this.date = date;
     }
 
-    public Event findEvent(int year, int month) {
-        if ((this.date.getYear() == year) && (this.date.getMonth() == month)) {
-            return this;
-        }
+    public int getYear() {
+        return date.getYear();
+    }
 
-        return null;
+    public int getMonth() {
+        return date.getMonth();
     }
 
     @Override

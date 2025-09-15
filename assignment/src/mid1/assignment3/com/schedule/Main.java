@@ -35,9 +35,7 @@ public class Main {
         System.out.println("== 2025년 3월 이벤트 목록 ==");
         Event[] marchEvents = manager.findEventsInMonth(2025, 3);
         for (Event event : marchEvents) {
-            if(event != null) {
-                System.out.println(event);
-            }
+            System.out.println(event);
         }
     }
 }
