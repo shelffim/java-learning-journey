@@ -17,8 +17,8 @@ public class UserRepository {
 
     public void addUser(User user) {
         // 배열 꽉 차면 용량 늘리기
-        if (INIT_LEN <= count) {
-            this.users = Arrays.copyOf(users,INIT_LEN * 2);
+        if (users.length == count) {
+            this.users = Arrays.copyOf(users,users.length * 2);
         }
 
         users[count++] = user;
