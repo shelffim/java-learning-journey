@@ -11,18 +11,20 @@ public class PlaylistManager {
     private final Set<Song> songs = new LinkedHashSet<>();
 
     public void addSong(Song song) {
-        if (songs.contains(song)) {
-            System.out.println("오류: 이미 존재하는 곡입니다. (ID: " + song.getId() + ")");
+        if (songs.add(song)) {
+            System.out.println("곡 '" + song.getTitle() + "' 가 추가되었습니다.");
             return;
         }
 
-        System.out.println("곡 '" + song.getTitle() + "' 가 추가되었습니다.");
-        songs.add(song);
+        System.out.println("오류: 이미 존재하는 곡입니다. (ID: " + song.getId() + ")");
     }
 
     public void removeSong(Song song) {
-        System.out.println("곡 '" + song.getTitle() + "'가 삭제되었습니다.");
-        songs.remove(song);
+        if (songs.remove(song)) {
+            System.out.println("곡 '" + song.getTitle() + "'가 삭제되었습니다.");
+            return;
+        }
+        System.out.println("오류: 삭제하려는 곡이 플레이리스트에 없습니다.");
     }
 
     public Set<Song> getSongs() {
