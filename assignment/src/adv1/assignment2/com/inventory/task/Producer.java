@@ -4,7 +4,7 @@ import adv1.assignment2.com.inventory.domain.Inventory;
 
 public class Producer implements Runnable {
 
-    private Inventory inventory;
+    private final Inventory inventory;
 
     public Producer(Inventory inventory) {
         this.inventory = inventory;
