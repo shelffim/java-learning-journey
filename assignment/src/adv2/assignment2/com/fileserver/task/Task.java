@@ -1,9 +1,6 @@
 package adv2.assignment2.com.fileserver.task;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -52,6 +49,8 @@ public class Task implements Runnable{
                     handleListCommand(path, output);
                 } else if (command.equalsIgnoreCase("view")) {
                     handleViewCommand(path, output);
+                } else if (command.equalsIgnoreCase("download")) {
+                    handleDownloadCommand(path, output);
                 } else {
                     // 약속되지 않은 명령어가 들어왔을 경우, 실패와 에러 메시지를 보내기로 약속했다.
                     output.writeBoolean(false);
@@ -97,7 +96,7 @@ public class Task implements Runnable{
     }
 
     // 'ls' 명령어의 비즈니스 로직을 처리한다.
-    // 디렉토리 목록을 읽어 클라이언트에세 전송한다.
+    // 디렉토리 목록을 읽어 클라이언트에게 전송한다.
     private static void handleListCommand(String pathString, DataOutputStream output) throws IOException {
         // 파일 시스템 접근 시 발생할 수 있는 모든 I/O 예외를 여기서 잡아,
         // 서버 스레드가 비정상 종료되지 않고 클라이언트에세 정상적인 실패 응답을 보내도록 한다.
@@ -124,6 +123,36 @@ public class Task implements Runnable{
         } catch (IOException e) {
             output.writeBoolean(false);
             output.writeUTF("[ERROR] 디렉토리 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    // 'download' 명령어의 비즈니스 로직을 처리한다.
+    // 파일을 읽어 바이트 스트림을 클라이언트에게 전송한다.
+    private void handleDownloadCommand(String pathString, DataOutputStream output) throws IOException {
+        Path path = Path.of(pathString);
+
+        // 파일을 실제로 읽기 전에, 요청이 유효한지 먼저 검사한다.
+        // 불필요한 I/O 작업을 막고, 클라이언트에게 더 명확한 에러 메시지를 준다.
+        if (!Files.exists(path) || !Files.isRegularFile(path)) {
+            output.writeBoolean(false);
+            output.writeUTF("[ERROR] 해당 파일을 찾을 수 없거나 디렉토리입니다: " + pathString);
+            return;
+        }
+
+        // 파일을 읽기전에 파일의 크기를 구한다.
+        long fileSize = Files.size(path);
+
+        // 성공 여부와 파일 크기를 보낸다.
+        output.writeBoolean(true);
+        output.writeLong(fileSize);
+
+        // 파일을 열고, 1바이트씩 읽어서 보낸다.
+        try (InputStream inputStream = Files.newInputStream(path)) {
+
+            int data;
+            while ((data = inputStream.read()) != -1 ) {
+                output.write(data);
+            }
         }
     }
 }

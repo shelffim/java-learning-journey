@@ -1,9 +1,8 @@
 package adv2.assignment2.com.fileserver.client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 import static adv2.util.MyLogger.log;
@@ -28,7 +27,7 @@ public class FileClient {
             // 무한 루프를 사용한다.
             while (true) {
 
-                System.out.println("명령어를 입력하세요 (예: ls <경로>, view <경로>):");
+                System.out.println("명령어를 입력하세요 (예: ls <경로>, view <파일명>, download <파일명>):");
                 System.out.print("> ");
                 String request = scanner.nextLine();
 
@@ -60,6 +59,8 @@ public class FileClient {
                         handleListResponse(input);
                     } else if (command.equalsIgnoreCase("view")) {
                         handleViewResponse(input);
+                    } else if (command.equalsIgnoreCase("download")) {
+                        handleDownloadResponse(input, path);
                     }
                 } else {
                     // isSuccess가 false일 경우, 서버는 항상 다음에 에러 메시지를 보내기로 약속했다.
@@ -91,6 +92,35 @@ public class FileClient {
                 break;
             }
             System.out.println(line);
+        }
+    }
+
+
+    // 'download' 명령어에 대한 서버의 성공 응답을 처리한다.
+    private static void handleDownloadResponse(DataInputStream input, String path) throws IOException {
+        long fileSize = input.readLong();
+        System.out.println(path + " 파일 다운로드 시작");
+
+        // 다운로드 받을 로컬 파일 정한다.
+        File downloadFile = new File("adv2/download_" + Path.of(path).getFileName().toString());
+
+        try (FileOutputStream fos = new FileOutputStream(downloadFile)) {
+            long start = System.currentTimeMillis();
+
+            for (long i = 0; i < fileSize; i++) {
+                int data = input.read();
+
+                // 파일이 예정보다 일찍 끝날 경우
+                if (data == -1) {
+                    System.out.println("[Warning] 파일이 예상보다 일찍 종료되었습니다.");
+                    break;
+                }
+                fos.write(data);
+            }
+
+            long end = System.currentTimeMillis();
+            System.out.println(fileSize + " 바이트 파일 다운로드 완료. (소요 시간: " + (end - start) / 1000.0 + "초)");
+
         }
     }
 }
