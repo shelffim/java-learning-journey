@@ -34,18 +34,20 @@ public class DownloadTask implements Runnable{
                 // 다운로드 받을 로컬 파일 정한다.
                 File downloadFile = new File("adv2/download_" + TARGET);
 
-                try (FileOutputStream fos = new FileOutputStream(downloadFile)) {
+                try (FileOutputStream fos = new FileOutputStream(downloadFile);
+                     BufferedOutputStream bos = new BufferedOutputStream(fos);
+                ) {
                     // 데이터를 묶어서 송수신하기 위한 버킷을 추가한다.
                     final int BUFFER_SIZE = 8192;
                     byte[] buffer = new byte[BUFFER_SIZE];
-                    int bufferIndex;
+                    int bytesRead;
                     long totalSize = 0;
 
                     long start = System.currentTimeMillis();
 
-                    while (totalSize < fileSize && (bufferIndex = input.read(buffer)) != -1){
-                        fos.write(buffer, 0, bufferIndex);
-                        totalSize += bufferIndex;
+                    while (totalSize < fileSize && (bytesRead = input.read(buffer)) != -1){
+                        bos.write(buffer, 0, bytesRead);
+                        totalSize += bytesRead;
                     }
 
                     long end = System.currentTimeMillis();

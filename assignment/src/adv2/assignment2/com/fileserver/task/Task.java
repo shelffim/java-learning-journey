@@ -146,17 +146,14 @@ public class Task implements Runnable{
         output.writeBoolean(true);
         output.writeLong(fileSize);
 
-        // 파일을 열고, 1바이트씩 버퍼에 저장 후 버퍼가 다 찼을 경우, 버퍼를 송신 후 버퍼를 비운다.
-        try (InputStream inputStream = Files.newInputStream(path)) {
+        // BufferedInputStream으로 입력 스트림의 성능을 향상시키고,
+        // Java 9 이상에서 제공하는 transferTo 메서드를 사용해 I/O 과정을 내부적으로 처리하도록 위임한다.
+        // 이를 통해 복잡한 while 루프 없이 코드를 간결하게 유지하고, JVM에 의해 최적화된 방식으로 데이터를 전송한다.
+        try (InputStream inputStream = Files.newInputStream(path);
+             BufferedInputStream bis = new BufferedInputStream(inputStream);
+        ) {
 
-            // 데이터를 묶어서 송신하기 위한 버킷을 추가한다.
-            final int BUFFER_SIZE = 8192;
-            byte[] buffer = new byte[BUFFER_SIZE];
-
-            int bufferIndex; // input.read(buffer)은 버킷의 담긴 데이터 수 반환
-            while ((bufferIndex = inputStream.read(buffer)) != -1 ) {
-                output.write(buffer, 0, bufferIndex);
-            }
+            bis.transferTo(output);
         }
     }
 }
