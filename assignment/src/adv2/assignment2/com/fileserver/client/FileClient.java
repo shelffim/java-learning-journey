@@ -105,17 +105,17 @@ public class FileClient {
         File downloadFile = new File("adv2/download_" + Path.of(path).getFileName().toString());
 
         try (FileOutputStream fos = new FileOutputStream(downloadFile)) {
+            // 데이터를 묶어서 송수신하기 위한 버킷을 추가한다.
+            final int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bufferIndex;
+            long totalSize = 0;
+
             long start = System.currentTimeMillis();
 
-            for (long i = 0; i < fileSize; i++) {
-                int data = input.read();
-
-                // 파일이 예정보다 일찍 끝날 경우
-                if (data == -1) {
-                    System.out.println("[Warning] 파일이 예상보다 일찍 종료되었습니다.");
-                    break;
-                }
-                fos.write(data);
+            while (totalSize < fileSize && (bufferIndex = input.read(buffer)) != -1){
+                fos.write(buffer, 0, bufferIndex);
+                totalSize += bufferIndex;
             }
 
             long end = System.currentTimeMillis();
