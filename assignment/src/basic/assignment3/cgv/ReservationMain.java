@@ -5,12 +5,11 @@ import basic.assignment3.cgv.reserve.ReservationSystem;
 
 public class ReservationMain {
     public static void main(String[] args) {
-        // 영화 생성 (final 필드 사용)
         Movie movie = new Movie("오펜하이머", 10);
 
-        // 예매 시스템 생성
         ReservationSystem system = new ReservationSystem(movie);
 
+        // 예매 전 좌석을 확인하여 예매 후 좌석 상태 비교를 할 수 있게 함.
         System.out.println("=== 초기 좌석 상태 ===");
         system.printSeatStatus();
         System.out.println();
@@ -38,7 +37,7 @@ public class ReservationMain {
         system.printSeatStatus();
         System.out.println();
 
-        // 5. 전체 예매 건수 확인 (static 변수/메서드 사용)
+        // 5. 전체 예매 건수 확인
         System.out.println("====================");
         System.out.println("총 예매된 좌석 수: " + ReservationSystem.getTotalReservations());
     }
