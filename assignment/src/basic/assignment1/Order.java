@@ -16,6 +16,7 @@ public class Order {
         this.finalPrice = this.totalPrice; // 할인이 없을 경우를 대비해 초기화
     }
 
+    // for문을 사용해 주문 상품의 가격 총합을 구합니다.
     public int calculateTotalPrice() {
         int sum = 0;
         for (Item item : items) {
@@ -24,6 +25,7 @@ public class Order {
         return sum;
     }
 
+    // 할인 정책 적용 한 최종 금액을 저장합니다.
     public void setFinalPrice(int finalPrice) {
         this.finalPrice = finalPrice;
     }

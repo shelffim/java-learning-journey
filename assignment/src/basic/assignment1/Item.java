@@ -1,7 +1,6 @@
 package basic.assignment1;
 
 public class Item {
-    // 이전 답변과 동일
     private String itemName;
     private int price;
     private int stockQuantity;

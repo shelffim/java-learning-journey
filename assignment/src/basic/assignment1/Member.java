@@ -1,7 +1,6 @@
 package basic.assignment1;
 
 public class Member {
-    // 이전 답변과 동일
     private long memberId;
     private String name;
     private Grade grade;
