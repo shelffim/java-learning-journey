@@ -15,10 +15,10 @@ public class PatientManagement {
             System.out.println("========================================");
             System.out.print("입력:");
             int menu = scanner.nextInt();
+            scanner.nextLine(); // nextInt() 호출 후 남은 개행 문자를 처리하기 위함.
             switch (menu) {
                 case 1:
                     if (idx < patients.length) {
-                        scanner.nextLine();
                         patients[idx] = new Patient();
                         System.out.print("환자 번호를 입력하세요:");
                         patients[idx].pNum = scanner.nextLine();
@@ -37,6 +37,7 @@ public class PatientManagement {
                     }
                     break;
                 case 2:
+                    // for문을 사용하여 목록을 순회한다.
                     for(int i = 0; i < idx; ++i) {
                         String var10001 = patients[i].pNum;
                         System.out.println("[" + var10001 + "] " + patients[i].pName + " (" + patients[i].pSex + ", " + patients[i].pAge + "세, " + patients[i].pBloodType + "형)");
@@ -44,7 +45,7 @@ public class PatientManagement {
                     break;
                 case 3:
                     System.out.println("프로그램을 종료합니다.");
-                    return;
+                    return; // main 메서드를 종료하여 프로그램 전체를 끝낸다.
             }
         }
     }
